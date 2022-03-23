@@ -14,10 +14,16 @@
 #6.	õppetund	13.10 - 13.55
 #7.	õppetund	14.05 - 14.50
 
+#on vaja tsykklit
+
 from locale import currency
 import time 
 
-#class Tunnid:   ???
+class Tund:
+    def __init__(self, algus, lopp):
+        self.algus = algus
+        self.lopp = lopp
+
 
 def tundi_leidmine(current_time):
     if lopp1 >= current_time >= tundide_algus[0]:    #find out how to compare floats?
@@ -41,8 +47,7 @@ tundide_algus = [8.00, 8.55, 9.55, 11.00, 12.05, 13.10, 14.05]
 tundide_lopp = [8.45, 9.40, 10.40, 11.45, 12.50, 14.00, 14.50]
 
 
-algus1 = 8.00
-lopp1 = 8.45
+tund_1 = Tund(8.00, 8.45)
 
 t = time.localtime()
 current_time = time.strftime("%H:%M:", t)
