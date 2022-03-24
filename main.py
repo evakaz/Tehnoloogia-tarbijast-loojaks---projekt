@@ -1,8 +1,7 @@
 #autor: eva kazakovskaia
-#gets an input from a user(what it is) and finds out how much tume there is left till the end of the lesson
 #1. gets an input(what day it is), import daytime, finds current time 
 #2. finds what lesson it is(1-7)
-#3. finds how much time left till the end of the lesson
+#3. finds how much time left till the end of the lesson, and what lesson it is
 
 #possible easygui solution?
 
@@ -16,44 +15,80 @@
 
 #on vaja tsykklit
 
-from locale import currency
-import time 
-
-class Tund:
-    def __init__(self, algus, lopp):
-        self.algus = algus
-        self.lopp = lopp
+import time
 
 
-def tundi_leidmine(current_time):
-    if lopp1 >= current_time >= tundide_algus[0]:    #find out how to compare floats?
+def tundi_leidmine(current_time, tundide_lopp, tundide_algus):
+    if tundide_lopp[0] >= current_time >= tundide_algus[0]:
+        print("see on esimene tund!")
         tund = 1
-        print("See on esimene tund!")
+        return tund
+    if tundide_lopp[1] >= current_time >= tundide_algus[1]:
+        print("teine!")
+        tund = 2
+        return tund
+    if tundide_lopp[2] >= current_time >= tundide_algus[2]:
+        print("kolmas!")
+        tund = 3
+        return tund
+    if tundide_lopp[3] >= current_time >= tundide_algus[3]:
+        print("neljas!")
+        tund = 4
+        return tund
+    if tundide_lopp[4] >= current_time >= tundide_algus[4]:
+        print("viies!")
+        tund = 5
+        return tund
+    if tundide_lopp[5] >= current_time >= tundide_algus[5]:
+        print("kuues!")
+        tund = 6
+        return tund
+    if tundide_lopp[6] >= current_time >= tundide_algus[6]:
+        print("seitsmes!")
+        tund =7
+        return tund
     else:
-        print("See ei ole esimene tund")
+        print('tund praegu ei käi')
+        tund = 0
+        return tund
 
 
-def kui_palju_on_jaanud(tund):
+
+def kui_palju_on_jaanud(tund, tundide_lopp, current_time):
     if tund == 1:
-        jaak = lopp1 - current_time
+        jaak = tundide_lopp[0] - current_time
+        arvutamised()
+        #return jaak
+    if tund == 2:
+        jaak = tundide_lopp[1] - current_time
         return jaak
 
 
-
-#while True:
-    #continue
+def arvutamised(tundide_lopp):
+    tundide_lopp_list = []
+    for i in str(tundide_lopp[0]):
+        if i != '.':
+            tundide_lopp_list.append(int(i))
+    print(tundide_lopp_list)
+    
+    
+t = time.localtime()
+#current_time = float(time.strftime("%H.%M", t))
+current_time = 8.34
+print(current_time)
 
 tundide_algus = [8.00, 8.55, 9.55, 11.00, 12.05, 13.10, 14.05]
 tundide_lopp = [8.45, 9.40, 10.40, 11.45, 12.50, 14.00, 14.50]
 
+while tundide_lopp[6] >= current_time >= tundide_algus[0]:
+    tundi_leidmine(current_time)
+    vastus = input("kas sa tahad teada kui palju on vahetunnini jaanud:(jah/ei): ")
+    if vastus == 'jah':
+        print(kui_palju_on_jaanud(1))
+    else:
+        break
 
-tund_1 = Tund(8.00, 8.45)
 
-t = time.localtime()
-current_time = time.strftime("%H:%M:", t)
-print(current_time)
+#paev = input('Mis kuupäev täna on: ')
 
-day = input('What day is it today: ')
-
-tundi_leidmine(current_time)
 
