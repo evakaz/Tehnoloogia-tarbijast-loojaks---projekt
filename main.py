@@ -1,94 +1,71 @@
 #autor: eva kazakovskaia
-#1. gets an input(what day it is), import daytime, finds current time 
-#2. finds what lesson it is(1-7)
-#3. finds how much time left till the end of the lesson, and what lesson it is
+#Kaheksanda klassi õpilane Marta tahab alati teada saada, kui palju on tunni lõpuni aega jäänud.
+#Et teha seda kiiremini, Marta kirjutas programmi, mis:
+#*küsib kasutajalt mis kell praegu on
+#Funktsioon "arvutamised" teisendab tundidest minutitesse.
+#Funktsioon "tundi_leidmine" arvutab mis tund(1-7) praegu käib.
+#Funktsioon "kui_palju_on_jaanud"  leiab, kui palju on jäänud tunni lõpuni.
+#Ekraanile väljastatakse funktsiooni "kui_palju_on_jaanud" tulemuse
 
-#possible easygui solution?
+#1. õppetund 8.00 - 8.45
+#2. õppetund 8.55 - 9.40
+#3. õppetund 9.55 - 10.40
+#4. õppetund 11.00 - 11.45
+#5. õppetund 12.05 - 12.50
+#6. õppetund 13.10 - 13.55
+#7. õppetund 14.05 - 14.50
 
-#1.	õppetund	8.00 - 8.45
-#2.	õppetund	8.55 - 9.40
-#3.	õppetund	9.55 - 10.40
-#4.	õppetund	11.00 - 11.45
-#5.	õppetund	12.05 - 12.50
-#6.	õppetund	13.10 - 13.55
-#7.	õppetund	14.05 - 14.50
-
-#on vaja tsykklit
 
 import time
+import math
 
 
-def tundi_leidmine(current_time, tundide_lopp, tundide_algus):
-    if tundide_lopp[0] >= current_time >= tundide_algus[0]:
-        print("see on esimene tund!")
-        tund = 1
-        return tund
-    if tundide_lopp[1] >= current_time >= tundide_algus[1]:
-        print("teine!")
-        tund = 2
-        return tund
-    if tundide_lopp[2] >= current_time >= tundide_algus[2]:
-        print("kolmas!")
-        tund = 3
-        return tund
-    if tundide_lopp[3] >= current_time >= tundide_algus[3]:
-        print("neljas!")
-        tund = 4
-        return tund
-    if tundide_lopp[4] >= current_time >= tundide_algus[4]:
-        print("viies!")
-        tund = 5
-        return tund
-    if tundide_lopp[5] >= current_time >= tundide_algus[5]:
-        print("kuues!")
-        tund = 6
-        return tund
-    if tundide_lopp[6] >= current_time >= tundide_algus[6]:
-        print("seitsmes!")
-        tund =7
-        return tund
-    else:
-        print('tund praegu ei käi')
-        tund = 0
-        return tund
-
-
-
-def kui_palju_on_jaanud(tund, tundide_lopp, current_time):
-    if tund == 1:
-        jaak = tundide_lopp[0] - current_time
-        arvutamised()
-        #return jaak
-    if tund == 2:
-        jaak = tundide_lopp[1] - current_time
-        return jaak
-
-
-def arvutamised(tundide_lopp):
-    tundide_lopp_list = []
-    for i in str(tundide_lopp[0]):
-        if i != '.':
-            tundide_lopp_list.append(int(i))
-    print(tundide_lopp_list)
-    
-    
-t = time.localtime()
-#current_time = float(time.strftime("%H.%M", t))
-current_time = 8.34
-print(current_time)
-
+#                0     1     2     3      4      5       6
 tundide_algus = [8.00, 8.55, 9.55, 11.00, 12.05, 13.10, 14.05]
 tundide_lopp = [8.45, 9.40, 10.40, 11.45, 12.50, 14.00, 14.50]
 
-while tundide_lopp[6] >= current_time >= tundide_algus[0]:
-    tundi_leidmine(current_time)
-    vastus = input("kas sa tahad teada kui palju on vahetunnini jaanud:(jah/ei): ")
-    if vastus == 'jah':
-        print(kui_palju_on_jaanud(1))
-    else:
-        break
+
+# 8.00 -> 480
+# 8.55 -> 480 + 55 = 535
+# 9.55 -> 540 + 55 = 595
+def arvutamised(kell):
+    m = math.modf(kell)
+    return m[1] * 60 + m[0] * 100;
 
 
-#paev = input('Mis kuupäev täna on: ')
+# 8.00 -> 0
+# 8.20 -> 0
+# 8.50 -> -1
+# 9.00 -> 1
+def tundi_leidmine(current_time):
+    z = arvutamised(current_time)
+    # len(tundide_algus) = 7
+    # for 0..6
+    for i in range(len(tundide_algus)):
+        algus = arvutamised(tundide_algus[i])
+        lopp = arvutamised(tundide_lopp[i])
+        if algus <= z and z <= lopp:
+            return i
+
+    return -1
+
+
+# 0, 8.34 -> 11
+# 0, 8.45 -> 0
+def kui_palju_on_jaanud(tund, current_time):
+    lopp = arvutamised(tundide_lopp[tund])
+    return lopp - arvutamised(current_time)
+
+
+# Kasutajalt küsimine
+current_time = float(input("Mis kell on? "))
+
+tund = tundi_leidmine(current_time)
+if tund == -1:
+    print("Tund ei leindnud")
+else:
+    jaanud = kui_palju_on_jaanud(tund, current_time)
+    print("Tunni lõppuni on jäänud " + str(round(jaanud)) + " minutit.")
+
 
 
